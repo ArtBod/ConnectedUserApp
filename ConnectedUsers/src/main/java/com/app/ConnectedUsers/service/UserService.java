@@ -10,6 +10,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,12 +21,15 @@ import java.util.concurrent.ExecutionException;
 public class UserService {
 
     private static final String COLLECTION_NAME="User";
+    LocalDate myObjDate = LocalDate.now();
+    LocalTime myObjTime = LocalTime.now();
 
-    public  String saveUser(User user) throws ExecutionException, InterruptedException {
+    public  User saveUser(User user) throws ExecutionException, InterruptedException {
        Firestore db = FirestoreClient.getFirestore();
+       user.setRegistrationDate(myObjDate.toString());
+       user.setOnline(false);
        ApiFuture<WriteResult> collectionApiFuture= db.collection(COLLECTION_NAME).document(user.getEmail()).set(user);
-
-       return collectionApiFuture.get().getUpdateTime().toString();
+       return user;
     }
 
     public List<User> getUserDetails() throws ExecutionException, InterruptedException {
@@ -47,7 +52,6 @@ public class UserService {
     public User getUserDetailsByEmail(String email) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         DocumentReference documentReference = db.collection(COLLECTION_NAME).document(email);
-
         ApiFuture<DocumentSnapshot> future = documentReference.get();
         DocumentSnapshot document =future.get();
 
@@ -78,7 +82,6 @@ public class UserService {
 
         String tempEmail = user.getEmail();
         String tempPassword = user.getPassword();
-
         Firestore db = FirestoreClient.getFirestore();
         Iterable<DocumentReference> documentReference = db.collection(COLLECTION_NAME).listDocuments();
         Iterator<DocumentReference> iterator = documentReference.iterator();
@@ -89,6 +92,9 @@ public class UserService {
             DocumentSnapshot document =future.get();
             Ruser = document.toObject(User.class);
             if(Ruser.getEmail().equals(tempEmail) && Ruser.getPassword().equals(tempPassword)){
+                db.collection("User").document(user.getEmail()).update("lastLoginDate", myObjDate.toString());
+                db.collection("User").document(user.getEmail()).update("loginTime", myObjTime.toString());
+                db.collection("User").document(user.getEmail()).update("online", true);
                 return Ruser;
             }
             Ruser = null;
@@ -98,4 +104,29 @@ public class UserService {
         }
         return Ruser;
     }
+
+    public User UserLogout(User user) throws Exception {
+        String tempEmail = user.getEmail();
+        String tempPassword = user.getPassword();
+        Firestore db = FirestoreClient.getFirestore();
+        Iterable<DocumentReference> documentReference = db.collection(COLLECTION_NAME).listDocuments();
+        Iterator<DocumentReference> iterator = documentReference.iterator();
+        User Ruser = null;
+        while (iterator.hasNext()){
+            DocumentReference documentReference1=iterator.next();
+            ApiFuture<DocumentSnapshot> future =documentReference1.get();
+            DocumentSnapshot document =future.get();
+            Ruser = document.toObject(User.class);
+            if(Ruser.getEmail().equals(tempEmail) && Ruser.getPassword().equals(tempPassword)){
+                db.collection("User").document(user.getEmail()).update("online", false);
+                return Ruser;
+            }
+            Ruser = null;
+        }
+        if (Ruser == null){
+            throw new Exception("Bad credentials");
+        }
+        return Ruser;
+    }
+
 }

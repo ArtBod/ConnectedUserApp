@@ -1,23 +1,25 @@
-<div class="form-container">
+<div class="form-container mat-elevation-z5">
     <h1>Login</h1>
     <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
-      <small class="danger">{{msg}}</small>
+      <small class="text-danger">{{msg}}</small>
       <mat-form-field>
         <input matInput placeholder="Email address" formControlName="email"  name="email" >
-        <mat-error *ngIf="email?.errors?.['required']">
-          Email is required
-        </mat-error>
       </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder="Password" formControlName="password" type="password" name ="password" >
-        <mat-error *ngIf="password?.errors?.['required']">
-          Email is required
-        </mat-error>
-      </mat-form-field>
+      <div class="example-container">
+        <mat-form-field appearance="fill">
+          <mat-label>Enter your password</mat-label>
+          <input matInput [type]="hide ? 'password' : 'text'" matInput placeholder="Password" formControlName="password" type="password" name ="password">
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
     <div class="center margin-top">
       <button mat-raised-button color="primary" type="submit">
         Login
       </button>
     </div>
+    <span class="center margin-top">New User ? <a class="sing-up-link" href="registration" >Sign Up!</a> </span>
     </form>
-  </div>
+  </div> 
+  

@@ -16,22 +16,28 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/users")
+    @PostMapping("/signup")
     @CrossOrigin (origins = "http://localhost:4200")
-    public String saveUser(@RequestBody User user) throws ExecutionException, InterruptedException {
+    public User saveUser(@RequestBody User user) throws ExecutionException, InterruptedException {
         return userService.saveUser(user);
-    }
-
-    @GetMapping("/users/{email}")
-    @CrossOrigin (origins = "http://localhost:4200")
-    public User getUser(@PathVariable String email) throws ExecutionException, InterruptedException {
-        return userService.getUserDetailsByEmail(email);
     }
 
     @PostMapping("/login")
     @CrossOrigin (origins = "http://localhost:4200")
     public User UserLogin(@RequestBody User user) throws Exception {
         return userService.UserLogin(user);
+    }
+
+    @PostMapping("/logout")
+    @CrossOrigin (origins = "http://localhost:4200")
+    public User UserLogout(@RequestBody User user) throws Exception {
+        return userService.UserLogout(user);
+    }
+
+    @GetMapping("/users/{email}")
+    @CrossOrigin (origins = "http://localhost:4200")
+    public User getUser(@PathVariable String email) throws ExecutionException, InterruptedException {
+        return userService.getUserDetailsByEmail(email);
     }
 
     @GetMapping("/users")
@@ -43,7 +49,6 @@ public class UserController {
     @PutMapping("/users")
     @CrossOrigin (origins = "http://localhost:4200")
     public String updateUser(@RequestBody User user) throws ExecutionException, InterruptedException {
-
         return userService.updateUser(user);
     }
 
