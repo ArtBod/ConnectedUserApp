@@ -16,6 +16,8 @@ import { LoginComponent } from './components/login/login.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatListModule} from '@angular/material/list';
+import { MatTableModule } from '@angular/material/table'  
+
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import {MatListModule} from '@angular/material/list';
     MatDialogModule,
     HttpClientModule,
     ReactiveFormsModule,
-    MatListModule
+    MatListModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]

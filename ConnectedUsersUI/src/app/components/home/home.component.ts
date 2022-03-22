@@ -16,10 +16,10 @@ export class HomeComponent implements OnInit {
   
   msg ='';
   loginUser!: User;
-
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   users : User[] = [];
-  dataSource=this.users;
+  dataSource=this.users
+  displayedColumns: string[] = ['email', 'loginTime', 'lastLoginDate', 'name'];
+
   constructor(public activatedRoute: ActivatedRoute,private http:HttpClient,private router:Router,private _service: RegistrationService) {
   }
 
