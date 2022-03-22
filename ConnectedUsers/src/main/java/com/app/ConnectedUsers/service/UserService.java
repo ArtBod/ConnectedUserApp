@@ -44,7 +44,12 @@ public class UserService {
             ApiFuture<DocumentSnapshot> future =documentReference1.get();
             DocumentSnapshot document =future.get();
             User user = document.toObject(User.class);
-            userList.add(user);
+
+            //return only online users
+            if (user.getOnline().equals(true)){
+                userList.add(user);
+            }
+
         }
         return userList;
     }
@@ -95,6 +100,8 @@ public class UserService {
                 db.collection("User").document(user.getEmail()).update("lastLoginDate", myObjDate.toString());
                 db.collection("User").document(user.getEmail()).update("loginTime", myObjTime.toString());
                 db.collection("User").document(user.getEmail()).update("online", true);
+                db.collection("User").document(user.getEmail()).update("ip", user.getIp());
+                db.collection("User").document(user.getEmail()).update("loginCount",Ruser.getLoginCount()+1);
                 return Ruser;
             }
             Ruser = null;

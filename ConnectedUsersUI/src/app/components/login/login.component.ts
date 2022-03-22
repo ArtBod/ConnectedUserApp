@@ -1,4 +1,6 @@
-import { Component, OnInit, Output, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ThisReceiver } from '@angular/compiler';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RegistrationService } from 'src/app/registration.service';
@@ -20,7 +22,7 @@ export class LoginComponent implements OnInit {
     password: new FormControl('',Validators.required)
   });
   
-  constructor(private _service: RegistrationService,private _router : Router){}
+  constructor(private httpClient:HttpClient,private _service: RegistrationService,private _router : Router){}
   
 
   
@@ -40,18 +42,36 @@ export class LoginComponent implements OnInit {
     const { email, password } = this.loginForm.value;
     this.user.email=email;
     this.user.password=password;
-    this._service.loginUserFromRemote(this.user).subscribe(
-      data =>{
-        console.log("response recieved");
-        this.user=data
-        console.log(this.user);
-        localStorage.setItem('user', JSON.stringify(this.user));
-        this._router.navigate(['/home']);
+
+    //after we get that the user exsist take ip
+    this.httpClient.get('https://jsonip.com/').subscribe(
+      (response:any) => {
+        this.user.ip =response.ip;
+        console.log(this.user.ip + "my ip")
       },
-      error => {console.log("exception occured")
-      this.msg="Bad credentials,please enter valid email and password";
-    }
-    );
+      (error)=>{
+        console.log(error)
+      }
+    )
+
+    //set wait to get response from :'https://jsonip.com/'
+    setTimeout(() =>{
+      //do what you need here
+      this._service.loginUserFromRemote(this.user).subscribe(
+        data =>{
+          console.log("response recieved");
+          this.user=data
+          console.log(this.user);
+          localStorage.setItem('user', JSON.stringify(this.user));
+          this._router.navigate(['/home']);
+        },
+        error => {console.log("exception occured")
+        this.msg="Bad credentials,please enter valid email and password";
+      }
+      );
+  }, 1000);
+
+
   }
 
 }

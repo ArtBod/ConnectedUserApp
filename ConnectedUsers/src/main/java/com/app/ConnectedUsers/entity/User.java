@@ -10,7 +10,25 @@ public class User {
     private String registrationDate;
     private String lastLoginDate;
     private String loginTime;
+    private String ip;
     private Boolean Online;
+    private double loginCount=0;
+
+    public double getLoginCount() {
+        return loginCount;
+    }
+
+    public void setLoginCount(double loginCount) {
+        this.loginCount = loginCount;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public String getLoginTime() {
         return loginTime;

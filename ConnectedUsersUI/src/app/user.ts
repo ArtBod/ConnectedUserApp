@@ -5,6 +5,9 @@ export class User{
     registrationDate!:string;
     lastLoginDate!:string;
     online!:boolean;
+    ip!:string;
+    loginCount!:number;
+    
     constructor(){}
 
 }

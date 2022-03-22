@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   loginUser!: User;
   users : User[] = [];
   dataSource=this.users
-  displayedColumns: string[] = ['email', 'loginTime', 'lastLoginDate', 'name'];
+  displayedColumns: string[] = ['email', 'loginTime', 'lastLoginDate', 'ip','getdetais'];
 
   constructor(public activatedRoute: ActivatedRoute,private http:HttpClient,private router:Router,private _service: RegistrationService) {
   }
@@ -43,8 +43,6 @@ export class HomeComponent implements OnInit {
     );
   }
 
-
-
   logoutUser() {
     this._service.logoutUserFromRemote(this.loginUser).subscribe(
       data =>{
@@ -54,5 +52,14 @@ export class HomeComponent implements OnInit {
       this.msg="Email was already exsist";
     }
     );
+  }
+
+  getRecord(user:User){
+
+    alert(
+      "Username: " + user.email+ "\n"+
+      "Register time: "+user.registrationDate+"\n"+
+      "Login Count: " +user.loginCount+"\n"
+    )
   }
 }

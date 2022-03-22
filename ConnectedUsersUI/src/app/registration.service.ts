@@ -10,6 +10,7 @@ export class RegistrationService {
 
   constructor(private _http :HttpClient) { }
 
+
   public loginUserFromRemote(user:User):Observable<any>{
     return this._http.post<any>("http://localhost:8080/login",user)
   }
@@ -21,5 +22,4 @@ export class RegistrationService {
   public logoutUserFromRemote(user:User):Observable<any>{
     return this._http.post<any>("http://localhost:8080/logout",user)
   }
-
 }
