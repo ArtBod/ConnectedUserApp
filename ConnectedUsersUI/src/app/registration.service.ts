@@ -9,19 +9,9 @@ import{tap} from 'rxjs/operators'
 export class RegistrationService {
 
   constructor(private _http :HttpClient) { }
-
-  private _refreshNeeded$= new Subject<void>();
   
-  get refreshNeeded$(){
-    return this._refreshNeeded$;
-  }
-
   public loginUserFromRemote(user:User):Observable<any>{
-    return this._http.post<any>("http://localhost:8080/login",user).pipe(
-    tap(() =>{
-      this._refreshNeeded$.next();
-    })
-    );
+    return this._http.post<any>("http://localhost:8080/login",user)
   }
 
   public singUp(user:User):Observable<any>{

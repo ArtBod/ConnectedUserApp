@@ -1,11 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit ,Input, ViewChild, ElementRef} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { interval, map, Observable, Subscription } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
 import { RegistrationService } from 'src/app/registration.service';
 import { User } from 'src/app/user';
-import { LoginComponent } from '../login/login.component';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-home',
@@ -20,22 +19,28 @@ export class HomeComponent implements OnInit {
   displayedColumns: string[] = ['email', 'loginTime', 'lastLoginDate', 'ip','getdetais'];
   private updateSubscription!: Subscription;
 
-
-
   constructor(public activatedRoute: ActivatedRoute,private http:HttpClient,private router:Router,private _service: RegistrationService) {
   }
 
   ngOnInit(): void {
+
     this.loginUser = JSON.parse(localStorage.getItem('user') || '{}');
     console.log(this.loginUser);
-    alert("Hi "+ this.loginUser.email + " Welcome to the App!")
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Welcome',
+      text: 'Hi ' + this.loginUser.email + ' Welcome to the App!'
+    })
+
+    this.getAllUsers();
     this.updateSubscription = interval(1000).subscribe(
       (val) => {this.getAllUsers()
     });
-    this.getAllUsers();
+    
   }
-
-
+ 
+  /* Get all get from the server */
   public getAllUsers(){
     let url = "http://localhost:8080/users";
     this.http.get<User[]>(url).subscribe(
@@ -47,7 +52,7 @@ export class HomeComponent implements OnInit {
         }
     );
   }
-
+  /* Logut action with post data to the server*/
   logoutUser() {
     this._service.logoutUserFromRemote(this.loginUser).subscribe(
       data =>{
@@ -58,13 +63,12 @@ export class HomeComponent implements OnInit {
     }
     );
   }
-
+ /* Function to show the user data from the table*/
   getRecord(user:User){
-
-    alert(
-      "Username: " + user.email+ "\n"+
-      "Register time: "+user.registrationDate+"\n"+
-      "Login Count: " +user.loginCount+"\n"
+    Swal.fire(   
+    "Username: " + user.email+ "\n"+
+    "Register time: "+user.registrationDate+"\n"+
+    "Login Count: " +user.loginCount+"\n"
     )
   }
 }

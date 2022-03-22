@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { RegistrationService } from 'src/app/registration.service';
 import { User } from 'src/app/user';
 
+ /* Function for matching the new password*/
 export function passwordsMatchValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const password = control.get('password')?.value;
@@ -54,6 +55,7 @@ export class RegistrationComponent implements OnInit {
     return this.signUpForm.get('name');
   }
 
+   /* submit action with post data for storing it in the DB*/
   submit() {
     if (!this.signUpForm.valid) {
       return;}
@@ -73,7 +75,6 @@ export class RegistrationComponent implements OnInit {
       );
 
   }
-
 
   ngOnInit(): void {
   }

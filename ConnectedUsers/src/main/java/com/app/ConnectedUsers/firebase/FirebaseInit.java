@@ -16,7 +16,6 @@ public class FirebaseInit {
     @PostConstruct
     public void init(){
 
-
         FileInputStream serviceAccount =
                 null;
         try {

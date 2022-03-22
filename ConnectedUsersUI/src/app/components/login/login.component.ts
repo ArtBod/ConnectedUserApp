@@ -1,5 +1,4 @@
 import { HttpClient } from '@angular/common/http';
-import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -24,8 +23,6 @@ export class LoginComponent implements OnInit {
   
   constructor(private httpClient:HttpClient,private _service: RegistrationService,private _router : Router){}
   
-
-  
   ngOnInit(): void {
   }
 
@@ -37,7 +34,9 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 
+ /* Login action with post data to the server*/
   loginUser(){
+
     const { email, password } = this.loginForm.value;
     this.user.email=email;
     this.user.password=password;
@@ -55,7 +54,6 @@ export class LoginComponent implements OnInit {
 
     //set wait to get response from :'https://jsonip.com/'
     setTimeout(() =>{
-      //do what you need here
       this._service.loginUserFromRemote(this.user).subscribe(
         data =>{
           console.log("response recieved");

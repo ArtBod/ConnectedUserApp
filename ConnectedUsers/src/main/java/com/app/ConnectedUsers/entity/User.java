@@ -1,7 +1,8 @@
 package com.app.ConnectedUsers.entity;
 
-import java.util.Date;
 
+
+/*This class represent User data*/
 public class User {
 
     private String name;

@@ -21,70 +21,21 @@ import java.util.concurrent.ExecutionException;
 public class UserService {
 
     private static final String COLLECTION_NAME="User";
-    LocalDate myObjDate = LocalDate.now();
-    LocalTime myObjTime = LocalTime.now();
+    LocalDate myObjDate;
+    LocalTime myObjTime;
 
+    /*Save the user detail from the UI in Firestore DB*/
     public  User saveUser(User user) throws ExecutionException, InterruptedException {
        Firestore db = FirestoreClient.getFirestore();
+       myObjDate= LocalDate.now();
        user.setRegistrationDate(myObjDate.toString());
        user.setOnline(false);
        ApiFuture<WriteResult> collectionApiFuture= db.collection(COLLECTION_NAME).document(user.getEmail()).set(user);
        return user;
     }
 
-    public List<User> getUserDetails() throws ExecutionException, InterruptedException {
-        Firestore db = FirestoreClient.getFirestore();
-        Iterable<DocumentReference> documentReference = db.collection(COLLECTION_NAME).listDocuments();
-        Iterator<DocumentReference> iterator = documentReference.iterator();
-
-        List<User> userList=new ArrayList<>();
-
-        while (iterator.hasNext()){
-            DocumentReference documentReference1=iterator.next();
-            ApiFuture<DocumentSnapshot> future =documentReference1.get();
-            DocumentSnapshot document =future.get();
-            User user = document.toObject(User.class);
-
-            //return only online users
-            if (user.getOnline().equals(true)){
-                userList.add(user);
-            }
-
-        }
-        return userList;
-    }
-
-    public User getUserDetailsByEmail(String email) throws ExecutionException, InterruptedException {
-        Firestore db = FirestoreClient.getFirestore();
-        DocumentReference documentReference = db.collection(COLLECTION_NAME).document(email);
-        ApiFuture<DocumentSnapshot> future = documentReference.get();
-        DocumentSnapshot document =future.get();
-
-        User user=null;
-        if(document.exists()) {
-            user = document.toObject(User.class);
-            return user;
-        }else {
-            return null;
-        }
-    }
-
-    public  String updateUser(User user) throws ExecutionException, InterruptedException {
-        Firestore db = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> collectionApiFuture= db.collection(COLLECTION_NAME).document(user.getEmail()).set(user);
-
-        return collectionApiFuture.get().getUpdateTime().toString();
-    }
-
-    public  String deleteUser(String email) throws ExecutionException, InterruptedException {
-        Firestore db = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> collectionApiFuture= db.collection(COLLECTION_NAME).document(email).delete();
-
-        return "Document ID: "+email+" has been deleted successfully";
-    }
-
+    /*UserLogin function use function to update fields in the Firestore DB */
     public User UserLogin(User user) throws Exception {
-
         String tempEmail = user.getEmail();
         String tempPassword = user.getPassword();
         Firestore db = FirestoreClient.getFirestore();
@@ -97,6 +48,8 @@ public class UserService {
             DocumentSnapshot document =future.get();
             Ruser = document.toObject(User.class);
             if(Ruser.getEmail().equals(tempEmail) && Ruser.getPassword().equals(tempPassword)){
+                myObjTime = LocalTime.now();
+                myObjDate= LocalDate.now();
                 db.collection("User").document(user.getEmail()).update("lastLoginDate", myObjDate.toString());
                 db.collection("User").document(user.getEmail()).update("loginTime", myObjTime.toString());
                 db.collection("User").document(user.getEmail()).update("online", true);
@@ -112,6 +65,7 @@ public class UserService {
         return Ruser;
     }
 
+    /*UserLogout function use to update fields in the Firestore DB */
     public User UserLogout(User user) throws Exception {
         String tempEmail = user.getEmail();
         String tempPassword = user.getPassword();
@@ -135,5 +89,63 @@ public class UserService {
         }
         return Ruser;
     }
+
+    /*getUserDetails function use to get the data from the Firestore Db and post To Frontend*/
+    public List<User> getUserDetails() throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        Iterable<DocumentReference> documentReference = db.collection(COLLECTION_NAME).listDocuments();
+        Iterator<DocumentReference> iterator = documentReference.iterator();
+
+        List<User> userList=new ArrayList<>();
+
+        while (iterator.hasNext()){
+            DocumentReference documentReference1=iterator.next();
+            ApiFuture<DocumentSnapshot> future =documentReference1.get();
+            DocumentSnapshot document =future.get();
+            User user = document.toObject(User.class);
+
+            //return only online users
+            if (user.getOnline().equals(true)){
+                userList.add(user);
+            }
+
+        }
+        return userList;
+    }
+
+
+
+    //Not in use
+    public User getUserDetailsByEmail(String email) throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        DocumentReference documentReference = db.collection(COLLECTION_NAME).document(email);
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+        DocumentSnapshot document =future.get();
+
+        User user=null;
+        if(document.exists()) {
+            user = document.toObject(User.class);
+            return user;
+        }else {
+            return null;
+        }
+    }
+
+
+    public  String updateUser(User user) throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        ApiFuture<WriteResult> collectionApiFuture= db.collection(COLLECTION_NAME).document(user.getEmail()).set(user);
+
+        return collectionApiFuture.get().getUpdateTime().toString();
+    }
+
+    public  String deleteUser(String email) throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        ApiFuture<WriteResult> collectionApiFuture= db.collection(COLLECTION_NAME).document(email).delete();
+
+        return "Document ID: "+email+" has been deleted successfully";
+    }
+
+
 
 }
