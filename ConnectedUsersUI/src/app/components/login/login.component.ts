@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
         this.msg="Bad credentials,please enter valid email and password";
       }
       );
-  }, 1000);
+  }, 2000);
 
 
   }

@@ -27,17 +27,16 @@ export class HomeComponent implements OnInit {
     this.loginUser = JSON.parse(localStorage.getItem('user') || '{}');
     console.log(this.loginUser);
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Welcome',
-      text: 'Hi ' + this.loginUser.email + ' Welcome to the App!'
-    })
-
     this.getAllUsers();
     this.updateSubscription = interval(1000).subscribe(
       (val) => {this.getAllUsers()
     });
     
+    Swal.fire({
+      icon: 'success',
+      title: 'Welcome',
+      text: 'Hi ' + this.loginUser.email + ' Welcome to the App!'
+    })
   }
  
   /* Get all get from the server */
