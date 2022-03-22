@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit ,Input, ViewChild, ElementRef} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, Observable } from 'rxjs';
+import { interval, map, Observable, Subscription } from 'rxjs';
 import { RegistrationService } from 'src/app/registration.service';
 import { User } from 'src/app/user';
 import { LoginComponent } from '../login/login.component';
@@ -17,8 +17,10 @@ export class HomeComponent implements OnInit {
   msg ='';
   loginUser!: User;
   users : User[] = [];
-  dataSource=this.users
   displayedColumns: string[] = ['email', 'loginTime', 'lastLoginDate', 'ip','getdetais'];
+  private updateSubscription!: Subscription;
+
+
 
   constructor(public activatedRoute: ActivatedRoute,private http:HttpClient,private router:Router,private _service: RegistrationService) {
   }
@@ -27,6 +29,9 @@ export class HomeComponent implements OnInit {
     this.loginUser = JSON.parse(localStorage.getItem('user') || '{}');
     console.log(this.loginUser);
     alert("Hi "+ this.loginUser.email + " Welcome to the App!")
+    this.updateSubscription = interval(1000).subscribe(
+      (val) => {this.getAllUsers()
+    });
     this.getAllUsers();
   }
 
