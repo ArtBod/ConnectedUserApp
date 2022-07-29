@@ -12,3 +12,6 @@ This application show connected users.
 ConnectedUserAppUI-Frontend folder(Angular)
 
 ConnectedUserApp-Backend foled(Spring Boot)
+
+
+The application contains a page that displays all the users connected to the system and details about the users
