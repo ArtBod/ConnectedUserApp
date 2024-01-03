@@ -1,5 +1,5 @@
 # ConnectedUserApp
-This application show connected users.
+This application shows the contact who logged in to the site.
 
 <div align="left">
     <img src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white" />
@@ -11,7 +11,7 @@ This application show connected users.
 
 ConnectedUserAppUI-Frontend folder(Angular)
 
-ConnectedUserApp-Backend foled(Spring Boot)
+ConnectedUserApp-Backend folder(Spring Boot)
 
 
 The application contains a page that displays all the users connected to the system and details about the users
